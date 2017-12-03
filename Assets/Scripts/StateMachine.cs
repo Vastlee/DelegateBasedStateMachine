@@ -1,4 +1,5 @@
-﻿/* Description: State Machine
+﻿/* Description: Setup to be a generic State Machine, what can use a pre-written state, but also has delegates 
+ * attached to each transition that can be assigned to as well. 
  * Brogrammer: Vast
  */
 
@@ -41,6 +42,7 @@ public class StateMachine {
 
 
     #region Class Methods
+    // Add a State to the State Machine
     public State AddState(State stateToAdd) {
         State addedState = null;
         if(stateToAdd.Name == "NONE") {
@@ -52,10 +54,14 @@ public class StateMachine {
             this.statesByName.Add(stateToAdd.Name, stateToAdd);
             this.states.Add(stateToAdd);
             addedState = stateToAdd;
+            if(this.onStateAdd != null) {
+                this.onStateAdd(addedState);
+            }
         }
         return addedState;
     }
 
+    // Add State by string to the State Machine
     public State AddState(string stateNameToAdd) {
         State addedState = null;
         if(this.statesByName.ContainsKey(stateNameToAdd)) {
@@ -67,7 +73,7 @@ public class StateMachine {
         return addedState;
     }
 
-    // Add a State to the State Machine
+    // Add State(s) to the State Machine
     public State[] AddStates(params State[] statesToAdd) {
         List<State> addedStates = new List<State>();
         State addedState;
@@ -78,6 +84,7 @@ public class StateMachine {
         return addedStates.ToArray();
     }
 
+    // Add State(s) by string to the State Machine
     public State[] AddStates(params string[] statesToAdd) {
         List<State> addedStates = new List<State>();
         State addedState;
@@ -88,10 +95,14 @@ public class StateMachine {
         return addedStates.ToArray();
     }
 
+    // Removes State from states & statesByName list, and broadcasts the removal
     public void RemState(State stateToRemove) {
         if(this.statesByName.ContainsKey(stateToRemove.Name)) {
             this.states.Remove(stateToRemove);
             this.statesByName.Remove(stateToRemove.Name);
+            if(this.onStateRem != null) {
+                this.onStateRem(stateToRemove);
+            }
         }
     }
 
@@ -113,6 +124,10 @@ public class StateMachine {
         }
     }
 
+    // If there is currently an active state, processes the ExitState()
+    // Adds the state to the stack for undo/jumping back
+    // Broadcasts the onChangeState event.
+    // Then processes the EnterState of the new State
     public void ChangeState(State toState) {
         if(this.statesByName.ContainsKey(toState.Name)) {
             if(this.activeState != null) {
@@ -120,6 +135,9 @@ public class StateMachine {
             }
             this.history.Push(toState);
             this.activeState = toState;
+            if(this.onStateChange != null) {
+                this.onStateChange(toState);
+            }
             this.activeState.EnterState();
         } else {
             Debug.LogError("<color=yellow>StateMachine does not contain an entry for: " + toState + "</color>");

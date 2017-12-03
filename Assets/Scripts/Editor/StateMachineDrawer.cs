@@ -10,12 +10,13 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(StateMachine))]
 [CanEditMultipleObjects]
 public class StateMachineDrawer : PropertyDrawer {
-    private StateMachine stateMachine;
+    private StateMachine stateMachine = null;
     private GUIContent[] states;
     private int currentSelection = 0;
     private int previousSelection = 0;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+        // Checks for a StateMachine, if not found, assigns it listeners
         if(this.stateMachine == null) {
             this.stateMachine = this.fieldInfo.GetValue(property.serializedObject.targetObject) as StateMachine;
             if(this.stateMachine != null) {
