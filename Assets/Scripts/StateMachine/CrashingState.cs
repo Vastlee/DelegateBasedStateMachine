@@ -1,4 +1,7 @@
-﻿using Vast.StateMachine;
+﻿/*  Description: Example of a state.
+ */
+
+ using Vast.StateMachine;
 
 public class CrashingState : State {
     #region Constructors

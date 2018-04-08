@@ -1,6 +1,4 @@
-﻿/* Description: Setup to be a generic State Machine, what can use a pre-written state, but also has delegates 
- * attached to each transition that can be assigned to as well. 
- * Brogrammer: Vast
+﻿/*  Description: Setup to be a generic State Machine. Includes calllbacks for add/rem/change of states
  */
 
 using System;
@@ -17,9 +15,9 @@ namespace Vast.StateMachine {
         private State previousState;
         private State noneState;
         private List<State> states = new List<State>();
-        private Action<State> onStateChange = null;
-        private Action<State> onStateAdd = null;
-        private Action<State> onStateRem = null;
+        private Action<State> onStateChange;
+        private Action<State> onStateAdd;
+        private Action<State> onStateRem;
 
         #region Properties
         public State ActiveState { get { return this.activeState; } }
@@ -52,6 +50,7 @@ namespace Vast.StateMachine {
                 addedState = stateToAdd;
                 if(this.onStateAdd != null) {
                     this.onStateAdd(addedState);
+
                 }
             }
             return addedState;

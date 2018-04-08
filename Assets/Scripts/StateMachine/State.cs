@@ -1,13 +1,12 @@
 ﻿/* Description: Base State Class. Has 3 Transision methods & 3 transistion events.
- * Brogrammer: Vast
  */
 
 namespace Vast.StateMachine {
     public class State : IState {
         private string name = string.Empty;
-        private System.Action onEnter;
-        private System.Action onExit;
-        private System.Action onUpdate;
+        private System.Action onEnter = () => { };
+        private System.Action onExit = () => { };
+        private System.Action onUpdate = () => { };
 
         #region Properties
         public string Name { get { return this.name; } protected set { this.name = value; } }
@@ -25,15 +24,15 @@ namespace Vast.StateMachine {
 
         #region Class Methods
         public virtual void EnterState() {
-            if(this.onEnter != null) { OnEnter(); }
+            OnEnter();
         }
 
         public virtual void ExitState() {
-            if(this.onExit != null) { OnExit(); }
+            OnExit();
         }
 
         public virtual void UpdateState() {
-            if(this.onUpdate != null) { OnUpdate(); }
+            OnUpdate();
         }
         #endregion
     }
