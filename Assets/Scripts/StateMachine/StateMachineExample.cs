@@ -25,19 +25,20 @@ public class StateMachineExample : MonoBehaviour {
         // Example of adding a Class State
         this.entityState.AddState(this.crashingState);
 
-        // Example of switching through states from Code every 2 seconds.
-        StartCoroutine(ChangeStatesWitCodeExample(2.0f));
+        // For Testing Only: Cycles through the states to demonstrate visual changes from code
+        StartCoroutine(CycleStates(1.0f));
     }
 
     public void Update() {
         this.entityState.UpdateActiveState();
     }
 
-    private IEnumerator ChangeStatesWitCodeExample(float pauseTime) {
+    private IEnumerator CycleStates(float pauseTime) {
         WaitForSeconds pause = new WaitForSeconds(pauseTime);
         State[] states = this.entityState.States.ToArray();
         for(int i = 0; i < states.Length; i++) {
             this.entityState.ChangeState(states[i]);
+            if(i >= (states.Length-1)) { i = 0; }
             yield return pause;
         }
     }
