@@ -4,6 +4,7 @@ using Vast.StateMachine;
 
 public class StateMachineExample : MonoBehaviour {
     [SerializeField] private StateMachine entityState;
+    [SerializeField] private ExampleStateSave save;
 
     private State runningState = new State("Running");
     private State jumpingState = new State("Jumping");
@@ -12,6 +13,7 @@ public class StateMachineExample : MonoBehaviour {
     public void Awake() {
         // Creates the new StateMachine.
         this.entityState = new StateMachine();
+        this.entityState.OnStateChange += UpdateStateSave;
 
         // Example of adding a state by Name to a State Machine upon creation
         this.entityState.AddState(new State("Idle"));
@@ -41,5 +43,9 @@ public class StateMachineExample : MonoBehaviour {
             if(i >= (states.Length-1)) { i = 0; }
             yield return pause;
         }
+    }
+
+    private void UpdateStateSave(State newState) {
+        this.save.SaveState = newState;
     }
 }

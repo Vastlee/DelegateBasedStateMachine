@@ -15,18 +15,15 @@ namespace Vast.StateMachine {
         private State previousState;
         private State noneState;
         private List<State> states = new List<State>();
-        private Action<State> onStateChange;
-        private Action<State> onStateAdd;
-        private Action<State> onStateRem;
 
         #region Properties
         public State ActiveState { get { return this.activeState; } }
         public State PreviousState { get { return this.previousState; } }
         public State NoneState { get { return this.noneState; } }
         public List<State> States { get { return this.states; } set { this.states = value; } }
-        public Action<State> OnStateChange { get { return this.onStateChange; } set { this.onStateChange = value; } }
-        public Action<State> OnStateAdd { get { return this.onStateAdd; } set { this.onStateAdd = value; } }
-        public Action<State> OnStateRem { get { return this.onStateRem; } set { this.onStateRem = value; } }
+        public Action<State> OnStateChange { get; set; }
+        public Action<State> OnStateAdd { get; set; }
+        public Action<State> OnStateRemove { get; set; }
         #endregion
 
         #region Constructors
@@ -48,9 +45,8 @@ namespace Vast.StateMachine {
             } else {
                 this.states.Add(stateToAdd);
                 addedState = stateToAdd;
-                if(this.onStateAdd != null) {
-                    this.onStateAdd(addedState);
-
+                if(OnStateAdd != null) {
+                    OnStateAdd(addedState);
                 }
             }
             return addedState;
@@ -113,8 +109,8 @@ namespace Vast.StateMachine {
         public void RemState(State stateToRemove) {
             if(ContainsState(stateToRemove)) {
                 this.states.Remove(stateToRemove);
-                if(this.onStateRem != null) {
-                    this.onStateRem(stateToRemove);
+                if(OnStateRemove != null) {
+                    OnStateRemove(stateToRemove);
                 }
             } else {
                 Debug.LogError("<color=yellow>State [" + stateToRemove.Name + "] NOT Removed! Error: State Not Found In StateMachine</color>");
@@ -165,8 +161,8 @@ namespace Vast.StateMachine {
                     this.previousState = this.activeState;
                 }
                 this.activeState = toState;
-                if(this.onStateChange != null) {
-                    this.onStateChange(toState);
+                if(OnStateChange != null) {
+                    OnStateChange(toState);
                 }
                 this.activeState.EnterState();
             } else {

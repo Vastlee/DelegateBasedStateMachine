@@ -9,18 +9,15 @@ public class CrashingState : State {
     #endregion
 
     #region State Methods
-    public override void EnterState() {
-        base.EnterState();
+    protected override void ExecuteEnter() {
         UnityEngine.Debug.Log("Entering Crashing State");
     }
 
-    public override void ExitState() {
-        base.ExitState();
+    protected override void ExecuteExit() {
         UnityEngine.Debug.Log("Exiting Crashing State");
     }
 
-    public override void UpdateState() {
-        base.UpdateState();
+    protected override void ExecuteUpdate() {
         UnityEngine.Debug.Log("Updating Crashing State");
     }
     #endregion
