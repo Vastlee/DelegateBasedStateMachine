@@ -14,7 +14,7 @@ namespace Vast.StateMachine {
     [CustomPropertyDrawer(typeof(StateMachine))]
     [CanEditMultipleObjects]
     public class StateMachineDrawer : PropertyDrawer {
-        private StateMachine stateMachine = null;
+        private StateMachine stateMachine;
         private int currentSelection = 0;
         private bool originalGUIState;
 
@@ -25,12 +25,14 @@ namespace Vast.StateMachine {
 
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.PrefixLabel(position, label);
-            position.x += EditorGUIUtility.labelWidth; // Moves position over the width of the label
-            position.width -= EditorGUIUtility.labelWidth; // Subtracts the width of the label from the position width.
-            this.originalGUIState = GUI.enabled;
-            GUI.enabled = (this.stateMachine.States.Count > 1); // If it has no states other than the default NONE, it turns the UI off.
+            // Turns off UI if NONE is the only state
+            GUI.enabled = (this.stateMachine.States.Count > 1);
+
+            // Moves x over & subtracts the width
+            position.x += EditorGUIUtility.labelWidth;
+            position.width -= EditorGUIUtility.labelWidth;
+
             this.currentSelection = EditorGUI.Popup(position, CurrentActiveStateIndex(), GetCurrentStates());
-            GUI.enabled = this.originalGUIState;
 
             if(GUI.changed) { // If another state is selected, it calls for the StateMachine to change.
                 this.stateMachine.ChangeState(this.stateMachine.States[this.currentSelection]);
