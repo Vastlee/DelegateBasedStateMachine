@@ -166,7 +166,7 @@ namespace Vast.StateMachine {
                 }
                 this.activeState.EnterState();
             } else {
-                Debug.LogError("<color=yellow>StateMachine does not contain an entry for: " + toState + "</color>");
+                Debug.LogError("<color=yellow>StateMachine does not contain an entry for: " + toState.Name + "</color>");
             }
         }
 

@@ -13,6 +13,7 @@ public class StateMachineExample : MonoBehaviour {
     public void Awake() {
         // Creates the new StateMachine.
         this.entityState = new StateMachine();
+
         this.entityState.OnStateChange += UpdateStateSave;
 
         // Example of adding a state by Name to a State Machine upon creation
@@ -26,6 +27,9 @@ public class StateMachineExample : MonoBehaviour {
 
         // Example of adding a Class State
         this.entityState.AddState(this.crashingState);
+
+        // For Testing Only: Loads previously saved state if it exists.
+        this.entityState.ChangeState(this.save.SaveState.Name);
 
         // For Testing Only: Cycles through the states to demonstrate visual changes from code
         StartCoroutine(CycleStates(1.0f));
