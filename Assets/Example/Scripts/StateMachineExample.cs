@@ -3,13 +3,15 @@ using UnityEngine;
 using Vast.StateMachine;
 
 public class StateMachineExample : MonoBehaviour {
+    private const float PAUSE_TIME = 1.5f;
+
     [SerializeField] private StateMachine entityState;
     [SerializeField] private ExampleStateSave save;
 
     private State runningState = new State("Running");
     private State jumpingState = new State("Jumping");
     private CrashingState crashingState = new CrashingState();
-
+ 
     public void Awake() {
         // Creates the new StateMachine.
         this.entityState = new StateMachine();
@@ -32,7 +34,7 @@ public class StateMachineExample : MonoBehaviour {
         this.entityState.ChangeState(this.save.SaveState.Name);
 
         // For Testing Only: Cycles through the states to demonstrate visual changes from code
-        StartCoroutine(CycleStates(1.0f));
+        StartCoroutine(CycleStates(PAUSE_TIME));
     }
 
     public void Update() {
@@ -42,9 +44,16 @@ public class StateMachineExample : MonoBehaviour {
     private IEnumerator CycleStates(float pauseTime) {
         WaitForSeconds pause = new WaitForSeconds(pauseTime);
         State[] states = this.entityState.States.ToArray();
+        int startIndex = 0;
         for(int i = 0; i < states.Length; i++) {
+            if(states[i].Name == this.save.SaveState.Name) {
+                startIndex = i;
+                break;
+            }
+        }
+        for(int i = startIndex; i < states.Length; i++) {
             this.entityState.ChangeState(states[i]);
-            if(i >= (states.Length-1)) { i = 0; }
+            if(i >= (states.Length - 1)) { i = 0; }
             yield return pause;
         }
     }
