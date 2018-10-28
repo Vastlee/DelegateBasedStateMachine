@@ -1,4 +1,5 @@
 ﻿/* Description: Base State Class. Has 3 Transision methods & 3 transistion events.
+ * Brogrammer: Vast
  */
 
 using System;
@@ -6,7 +7,7 @@ using System;
 namespace Vast.StateMachine {
     [System.Serializable]
     public class State : IState {
-        private string name = string.Empty;
+        private string name = String.Empty;
         private Action onEnter;
         private Action onExit;
         private Action onUpdate;
@@ -40,27 +41,21 @@ namespace Vast.StateMachine {
         #region Class Methods
         public void EnterState() {
             ExecuteEnter();
-            if(this.OnEnter != null) {
-                OnEnter();
-            }
+            OnEnter?.Invoke();
         }
 
         protected virtual void ExecuteEnter() { }
 
         public void ExitState() {
             ExecuteExit();
-            if(this.OnExit != null) {
-                OnExit();
-            }
+            OnExit?.Invoke();
         }
 
         protected virtual void ExecuteExit() { }
 
         public void UpdateState() {
             ExecuteUpdate();
-            if(this.OnUpdate != null) {
-                OnUpdate();
-            }
+            OnUpdate?.Invoke();
         }
 
         protected virtual void ExecuteUpdate() { }

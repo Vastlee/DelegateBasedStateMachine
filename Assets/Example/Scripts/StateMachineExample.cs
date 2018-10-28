@@ -10,7 +10,7 @@ public class StateMachineExample : MonoBehaviour {
 
     private State runningState = new State("Running");
     private State jumpingState = new State("Jumping");
-    private CrashingState crashingState = new CrashingState();
+    private State crashingState = new CrashingState();
  
     public void Awake() {
         // Creates the new StateMachine.

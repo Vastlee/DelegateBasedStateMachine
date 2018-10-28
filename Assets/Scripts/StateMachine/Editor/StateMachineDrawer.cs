@@ -44,10 +44,8 @@ namespace Vast.StateMachine {
             EditorUtility.SetDirty(property.serializedObject.targetObject);
         }
 
-        /// <summary>
-        /// Returns the States Names as a GUIContent array for the popup
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Returns the States Names as a GUIContent array for the popup</summary>
+        /// <returns>Array of GUIContent Created</returns>
         private GUIContent[] GetCurrentStates() {
             GUIContent[] result = new GUIContent[this.stateMachine.States.Count];
             for(int i = 0; i < result.Length; i++) {
@@ -56,10 +54,7 @@ namespace Vast.StateMachine {
             return result;
         }
 
-        /// <summary>
-        /// Returns the index # of the current Active State. Or 0 if there is none.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Returns the index # of the current Active State. Or 0 if there is none.</summary>
         private int CurrentActiveStateIndex() {
             int result = 0;
             if(this.stateMachine.ActiveState != null) {
