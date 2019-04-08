@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.Serialization;
 using UnityEngine;
 using Vast.StateMachine;
 
@@ -8,10 +9,10 @@ public class StateMachineExample : MonoBehaviour {
     [SerializeField] private StateMachine entityState;
     [SerializeField] private ExampleStateSave save;
 
-    private State runningState = new State("Running");
-    private State jumpingState = new State("Jumping");
-    private State crashingState = new CrashingState();
- 
+    readonly private State runningState = new State("Running");
+    readonly private State jumpingState = new State("Jumping");
+    readonly private State crashingState = new CrashingState();
+
     public void Awake() {
         // Creates the new StateMachine.
         this.entityState = new StateMachine();
@@ -42,18 +43,13 @@ public class StateMachineExample : MonoBehaviour {
     }
 
     private IEnumerator CycleStates(float pauseTime) {
-        WaitForSeconds pause = new WaitForSeconds(pauseTime);
-        State[] states = this.entityState.States.ToArray();
-        int startIndex = 0;
-        for(int i = 0; i < states.Length; i++) {
-            if(states[i].Name == this.save.SaveState.Name) {
-                startIndex = i;
-                break;
-            }
-        }
-        for(int i = startIndex; i < states.Length; i++) {
-            this.entityState.ChangeState(states[i]);
-            if(i >= (states.Length - 1)) { i = 0; }
+        var pause = new WaitForSeconds(pauseTime);
+        var states = this.entityState.States;
+
+        int index = 0;
+        while (true) {
+            this.entityState.ChangeState(states[index++]);
+            if (index >= states.Count) { index = 0; }
             yield return pause;
         }
     }
