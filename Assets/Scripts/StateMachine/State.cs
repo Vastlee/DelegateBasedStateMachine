@@ -1,8 +1,4 @@
-﻿/* Description: Base State Class. Has 3 Transision methods & 3 transistion events.
- * Brogrammer: Vast
- */
-
-using System;
+﻿using System;
 
 namespace Vast.StateMachine {
     [System.Serializable]

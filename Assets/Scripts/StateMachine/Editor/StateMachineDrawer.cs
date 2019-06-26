@@ -2,15 +2,8 @@
 using UnityEngine;
 
 namespace Vast.StateMachine {
-    /// <summary>
-    /// Draws a drop down with all states in the State Machine.
-    /// Displays the active state &amp; allows for changing state by selecting new one.
-    /// </summary>
-    /// <remarks>
-    /// Brogrammer: Vast
-    /// Created: 15/08/03
-    /// Last Modified: 18/02/01
-    /// </remarks>
+    /// <summary>Draws a drop down with all states in the State Machine.
+    /// Displays the active state &amp; allows for changing state by selecting new one. </summary>
     [CustomPropertyDrawer(typeof(StateMachine))]
     [CanEditMultipleObjects]
     public class StateMachineDrawer : PropertyDrawer {
@@ -19,7 +12,7 @@ namespace Vast.StateMachine {
         private bool originalGUIState;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-            if(this.stateMachine == null) {
+            if (this.stateMachine == null) {
                 this.stateMachine = this.fieldInfo.GetValue(property.serializedObject.targetObject) as StateMachine;
             }
 
@@ -34,7 +27,8 @@ namespace Vast.StateMachine {
 
             this.currentSelection = EditorGUI.Popup(position, CurrentActiveStateIndex(), GetCurrentStates());
 
-            if(GUI.changed) { // If another state is selected, it calls for the StateMachine to change.
+            // If another state is selected, it calls for the StateMachine to change.
+            if (GUI.changed) {
                 this.stateMachine.ChangeState(this.stateMachine.States[this.currentSelection]);
             }
             EditorGUI.EndProperty();
@@ -48,7 +42,7 @@ namespace Vast.StateMachine {
         /// <returns>Array of GUIContent Created</returns>
         private GUIContent[] GetCurrentStates() {
             GUIContent[] result = new GUIContent[this.stateMachine.States.Count];
-            for(int i = 0; i < result.Length; i++) {
+            for (int i = 0; i < result.Length; i++) {
                 result[i] = new GUIContent(this.stateMachine.States[i].Name);
             }
             return result;
@@ -57,7 +51,7 @@ namespace Vast.StateMachine {
         /// <summary>Returns the index # of the current Active State. Or 0 if there is none.</summary>
         private int CurrentActiveStateIndex() {
             int result = 0;
-            if(this.stateMachine.ActiveState != null) {
+            if (this.stateMachine.ActiveState != null) {
                 result = this.stateMachine.States.IndexOf(this.stateMachine.ActiveState);
             }
             return result;

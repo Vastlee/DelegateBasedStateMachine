@@ -1,8 +1,4 @@
-﻿/*  Description: Setup to be a generic State Machine. Includes calllbacks for add/rem/change of states
- *  Brogrammer: Vast
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Runtime.Serialization;
 using UnityEngine;
 using Vast.StateMachine;
 
