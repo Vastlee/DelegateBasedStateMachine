@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Vast.StateMachine;
 
@@ -43,7 +44,7 @@ public class StateMachineExample : MonoBehaviour {
 
     private IEnumerator CycleStates(float pauseTime) {
         var pause = new WaitForSeconds(pauseTime);
-        var states = this.entityState.States;
+        List<State> states = this.entityState.States;
 
         int index = 0;
         while (true) {
