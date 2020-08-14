@@ -9,7 +9,6 @@ namespace Vast.StateMachine {
     public class StateMachineDrawer : PropertyDrawer {
         private StateMachine stateMachine;
         private int currentSelection = 0;
-        private bool originalGUIState;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             if (this.stateMachine == null) {
@@ -18,7 +17,7 @@ namespace Vast.StateMachine {
 
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.PrefixLabel(position, label);
-            // Turns off UI if NONE is the only state
+            // Turns off UI if no states are in the state machine
             GUI.enabled = (this.stateMachine.States.Count > 1);
 
             // Moves x over & subtracts the width

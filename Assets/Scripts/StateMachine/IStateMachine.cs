@@ -1,9 +1,7 @@
 ﻿namespace Vast.StateMachine {
     public interface IStateMachine {
         State AddState(State stateToAdd);
-        State AddState(string stateNameToAdd);
         State[] AddStates(params State[] statesToAdd);
-        State[] AddStates(params string[] stateNamesToAdd);
         void RemState(State stateToRemove);
         void RemState(string stateNameToRemove);
         void RemStates(params State[] statesToRemove);

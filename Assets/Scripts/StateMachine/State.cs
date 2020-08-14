@@ -1,61 +1,22 @@
 ﻿using System;
 
 namespace Vast.StateMachine {
-    [System.Serializable]
-    public class State : IState {
+    [Serializable]
+    public abstract class State {
         private string name = String.Empty;
-        private Action onEnter;
-        private Action onExit;
-        private Action onUpdate;
 
         #region Properties
         public string Name {
             get { return this.name; }
             protected set { this.name = value; }
         }
-        public Action OnEnter {
-            get { return this.onEnter; }
-            protected set { this.onEnter = value; }
-        }
-        public Action OnExit {
-            get { return this.onExit; }
-            protected set { this.onExit = value; }
-        }
-        public Action OnUpdate {
-            get { return this.onUpdate; }
-            protected set { this.onUpdate = value; }
-        }
-        #endregion
-
-        #region Constructors
-        public State() { }
-        public State(string stateName) {
-            this.name = stateName;
-        }
         #endregion
 
         #region Class Methods
-        public void EnterState() {
-            ExecuteEnter();
-            OnEnter?.Invoke();
-        }
-
-        protected virtual void ExecuteEnter() { }
-
-        public void ExitState() {
-            ExecuteExit();
-            OnExit?.Invoke();
-        }
-
-        protected virtual void ExecuteExit() { }
-
-        public void UpdateState() {
-            ExecuteUpdate();
-            OnUpdate?.Invoke();
-        }
-
-        protected virtual void ExecuteUpdate() { }
-
+        public abstract void OnEnter();
+        public abstract void OnExit();
+        public abstract void Update();
+        public abstract void FixedUpdate();
         #endregion
     }
 }

@@ -3,29 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vast.StateMachine {
-    /// <summary>
-    /// Maintains List of States, handles Adding, Removing, &amp; Changing of Active States.
-    /// </summary>
+    /// <summary>Maintains List of States, handles Adding, Removing, &amp; Changing of Active States.</summary>
     [Serializable]
     public class StateMachine : IStateMachine {
-        private State activeState;
-        private State previousState;
-        private State noneState;
-        private List<State> states = new List<State>();
-
         #region Properties
-        public State ActiveState { get { return this.activeState; } }
-        public State PreviousState { get { return this.previousState; } }
-        public State NoneState { get { return this.noneState; } }
-        public List<State> States { get { return this.states; } set { this.states = value; } }
+        public State ActiveState { get; private set; }
+        public State PreviousState { get; private set; }
+        public List<State> States { get; private set; } = new List<State>();
         public Action<State> OnStateChange { get; set; }
         public Action<State> OnStateAdd { get; set; }
         public Action<State> OnStateRemove { get; set; }
         #endregion
 
         #region Constructors
-        public StateMachine() {
-            this.noneState = AddState(new State("NONE"));
+        public StateMachine() { }
+        public StateMachine(State[] states) {
+            AddStates(states);
         }
         #endregion
 
@@ -38,23 +31,9 @@ namespace Vast.StateMachine {
             if(ContainsState(stateToAdd)) {
                 Debug.LogError("<color=yellow>State [" + stateToAdd.Name + "] NOT Added! Error: Duplicate State Name</color>");
             } else {
-                this.states.Add(stateToAdd);
+                States.Add(stateToAdd);
                 addedState = stateToAdd;
                 OnStateAdd?.Invoke(addedState);
-            }
-            return addedState;
-        }
-
-        /// <summary>Adds it to the State Machine</summary>
-        /// <param name="stateNameToAdd"></param>
-        /// <returns>The Added State</returns>
-        public State AddState(string stateNameToAdd) {
-            State addedState = null;
-            if(ContainsState(stateNameToAdd)) {
-                Debug.LogError("<color=yellow>State [" + stateNameToAdd + "] NOT Added! Error: Duplicate State Name</color>");
-            } else {
-                State newState = new State(stateNameToAdd);
-                addedState = AddState(newState);
             }
             return addedState;
         }
@@ -74,26 +53,11 @@ namespace Vast.StateMachine {
             return addedStates.ToArray();
         }
 
-        /// <summary>Adds States by name to the StateMachine</summary>
-        /// <param name="stateNamesToAdd"></param>
-        /// <returns>Array of States Added</returns>
-        public State[] AddStates(params string[] stateNamesToAdd) {
-            List<State> addedStates = new List<State>();
-            State addedState = null;
-            for(int i = 0; i < stateNamesToAdd.Length; i++) {
-                addedState = AddState(stateNamesToAdd[i]);
-                if(addedState != null) {
-                    addedStates.Add(addedState);
-                }
-            }
-            return addedStates.ToArray();
-        }
-
         /// <summary>Removes State from State Machine</summary>
         /// <param name="stateToRemove"></param>
         public void RemState(State stateToRemove) {
             if(ContainsState(stateToRemove)) {
-                this.states.Remove(stateToRemove);
+                States.Remove(stateToRemove);
                 OnStateRemove?.Invoke(stateToRemove);
             } else {
                 Debug.LogError("<color=yellow>State [" + stateToRemove.Name + "] NOT Removed! Error: State Not Found In StateMachine</color>");
@@ -131,13 +95,13 @@ namespace Vast.StateMachine {
         /// <param name="toState"></param>
         public void ChangeState(State toState) {
             if(ContainsState(toState)) {
-                if(this.activeState != null) {
-                    this.activeState.ExitState();
-                    this.previousState = this.activeState;
+                if(ActiveState != null) {
+                    ActiveState.OnExit();
+                    PreviousState = ActiveState;
                 }
-                this.activeState = toState;
+                ActiveState = toState;
                 OnStateChange?.Invoke(toState);
-                this.activeState.EnterState();
+                ActiveState.OnEnter();
             } else {
                 Debug.LogError("<color=yellow>StateMachine does not contain an entry for: " + toState.Name + "</color>");
             }
@@ -156,17 +120,15 @@ namespace Vast.StateMachine {
 
         /// <summary>Calls UpdateState in the active State.</summary>
         public void UpdateActiveState() {
-            if(this.activeState != null) {
-                this.activeState.UpdateState();
-            }
+            ActiveState?.Update();
         }
 
         /// <summary>Does the State Machine contain this State?</summary>
         /// <param name="state"></param>
         /// <returns>True or False</returns>
         public bool ContainsState(State state) {
-            for(int i = 0; i < this.states.Count; i++) {
-                if(this.states[i] == state) { return true; }
+            for(int i = 0; i < States.Count; i++) {
+                if(States[i] == state) { return true; }
             }
             return false;
         }
@@ -175,8 +137,8 @@ namespace Vast.StateMachine {
         /// <param name="stateName"></param>
         /// <returns>True or False</returns>
         public bool ContainsState(string stateName) {
-            for(int i = 0; i < this.states.Count; i++) {
-                if(this.states[i].Name == stateName) { return true; }
+            for(int i = 0; i < States.Count; i++) {
+                if(States[i].Name == stateName) { return true; }
             }
             return false;
         }
@@ -187,9 +149,9 @@ namespace Vast.StateMachine {
         /// <returns>True or False</returns>
         public bool ContainsState(string stateName, out State foundState) {
             foundState = null;
-            for(int i = 0; i < this.states.Count; i++) {
-                if(this.states[i].Name == stateName) {
-                    foundState = this.states[i];
+            for(int i = 0; i < States.Count; i++) {
+                if(States[i].Name == stateName) {
+                    foundState = States[i];
                     break;
                 }
             }
